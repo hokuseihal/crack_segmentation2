@@ -1,3 +1,4 @@
+import os
 from multiprocessing import cpu_count
 
 import torch
@@ -56,8 +57,11 @@ if __name__ == '__main__':
                                                 num_workers=cpu_count())
     writer = {}
     startepoch = 0
-    savefolder = f'result/{savefolder}'
-    import os
+    savefolder = f'result/{savefolder}/'
+
+    os.makedirs(savefolder, exist_ok=True)
+    savefolder += f'{len(os.listdir(savefolder))}'
+    print(savefolder)
 
     os.makedirs(savefolder, exist_ok=True)
     for e in range(startepoch, epochs):
