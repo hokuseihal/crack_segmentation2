@@ -63,9 +63,9 @@ if __name__ == '__main__':
     traindataset = Dataset(txt='datasets/liner/train.txt', size=size)
     valdataset = Dataset(txt='datasets/liner/val.txt', size=size)
     traindataloader = torch.utils.data.DataLoader(traindataset, batch_size=batchsize, shuffle=True,
-                                                  num_workers=cpu_count())
+                                                  num_workers=max(cpu_count(),16))
     valdataloader = torch.utils.data.DataLoader(valdataset, batch_size=batchsize, shuffle=True,
-                                                num_workers=cpu_count())
+                                                num_workers=max(cpu_count(),16))
     writer = {}
     startepoch = 0
     savefolder = f'result/{savefolder}/'
