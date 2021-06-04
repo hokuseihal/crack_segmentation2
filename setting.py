@@ -6,6 +6,6 @@ criterion=nn.CrossEntropyLoss()
 batchsize=8
 epochs=500
 savefolder='tmp'
-cpu=True
+cpu=False
 CR=True
 path='../'

@@ -25,7 +25,7 @@ def operate(phase):
 
             data = data.to(device)
             target = target.to(device)
-            if CR and batchidx%2==0:
+            if CR and batchidx%2==1:
                 x_cutmix, cutparam = cutmix(data)
                 y_pred_cutmix, _ = cutmix(model(data), cutparam)
                 CRloss = F.mse_loss(model(x_cutmix), y_pred_cutmix)

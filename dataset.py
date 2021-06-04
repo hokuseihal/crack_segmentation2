@@ -15,16 +15,15 @@ def binary(x,a=.5):
     x[x<a]=0
     return x
 class LinerCrackDataset(torch.utils.data.Dataset):
-    def __init__(self,txt,size,path='../',**kwargs):
+    def __init__(self,txt,size,**kwargs):
         self.size=size
         with open(txt) as f:
-            self.txt=[l.strip().replace('jpg','txt').replace('../',path) for l in f.readlines() if os.path.exists(l.strip()[:-3]+'txt') and os.path.exists(l.strip()[:-3]+'jpg')]
+            self.txt=[l.strip().replace('jpg','txt') for l in f.readlines() if os.path.exists(l.strip()[:-3]+'txt') and os.path.exists(l.strip()[:-3]+'jpg')]
+        print(self.txt)
         self.transform=T.Compose([T.Resize(size),T.ToTensor()])
     def __len__(self):
         return len(self.txt)
     def __getitem__(self,idx):
-        print(self.txt[idx])
-        exit()
         im=Image.open(self.txt[idx].replace('txt','jpg'))
         mask=loadtxt(self.txt[idx])
         mask=np.floor(cv2.resize(mask,self.size)).astype(np.int64)
@@ -58,6 +57,6 @@ def loadtxt(path):
     return mask
 
 if __name__=='__main__':
-    linerdataset = LinerCrackDataset('datasets/liner/train.txt', (4032,3024))
-    for i in range(len(linerdataset)):
-        print(i)
+    linerdataset = LinerCrackDataset('datasets/liner/train.txt', (256,256),path='HI')
+    # for i in range(len(linerdataset)):
+    #     print(i)
