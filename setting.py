@@ -8,3 +8,4 @@ epochs=500
 savefolder='tmp'
 cpu=True
 CR=True
+path='../'

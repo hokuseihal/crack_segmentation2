@@ -60,7 +60,6 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(model.parameters())
     clscolor = torch.tensor([[0, 0, 0], [255, 255, 255], [0, 255, 0]])
     criterion = nn.CrossEntropyLoss()
-    size = (256, 256)
     traindataset = Dataset(txt='datasets/liner/train.txt', size=size)
     valdataset = Dataset(txt='datasets/liner/val.txt', size=size)
     traindataloader = torch.utils.data.DataLoader(traindataset, batch_size=batchsize, shuffle=True,
