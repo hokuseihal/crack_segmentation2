@@ -31,7 +31,7 @@ def operate(phase):
                 CRloss = F.mse_loss(model(x_cutmix), y_pred_cutmix)
                 # segloss = criterion(y_pred_cutmix, cutmix(target, cutparam))
                 loss = CRloss
-                print(f'{CRloss=}')
+                print(f'CRloss:{CRloss}')
                 core.addvalue(writer, f'CRloss:{phase}', CRloss.item(), e)
             else:
                 # NORMAL
