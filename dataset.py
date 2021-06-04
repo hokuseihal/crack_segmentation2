@@ -38,7 +38,7 @@ def loadtxt(path):
             if len(d)==5 and d[0]==ind:
                 if sec=='point':return int(d[1]),int(d[2])
                 elif sec=='cls':return int(d[3])
-        print(f"{path},{ind} is not found.")
+        # print(f"{path},{ind} is not found.")
     mask=np.zeros((800,800))
     with open(path) as f:
         data=[d.strip().split(',') for d in f.readlines()]
@@ -51,7 +51,8 @@ def loadtxt(path):
             elif len(d)==2:
                 cv2.line(mask,getdata(d[0]),getdata(d[1]),thickness=thickness,color=getdata(d[0],'cls')+1)
         except:
-            print(f'ERROR on {path},{d}')
+            # print(f'ERROR on {path},{d}')
+            pass
     return mask
 
 if __name__=='__main__':

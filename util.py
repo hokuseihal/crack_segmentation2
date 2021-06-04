@@ -59,3 +59,22 @@ def mAP(_pred,_t_idx):
             map.append(average_precision_score((t_idx==clsidx).cpu().numpy().reshape(-1),pred[:,clsidx].cpu().numpy().reshape(-1)))
 
     return np.mean(map)
+def cutmix(x, param=None, ratio=0.3):
+    B, C, H, W = x.shape
+    if param is None:
+        px, py = torch.randint(int(H * ratio), int(H * (1 - ratio)), [1]), torch.randint(int(W * ratio),
+                                                                                         int(W * (1 - ratio)), [1])
+        # print('p',px,py)
+        mask = torch.zeros(H, W).to(x.device)
+        mask[:px, :py] = 1
+        if torch.randint(2, [1]) == 0:
+            mask = mask.flipud()
+        if torch.randint(2, [1]) == 0:
+            mask = mask.fliplr()
+        randperm = torch.randperm(B)
+        # randperm=torch.tensor([1,0])
+    else:
+        mask, randperm = param
+    # x[..., mask] = x[randperm][..., mask]
+    x=x*mask+x[randperm]*(1-mask)
+    return x, (mask, randperm)

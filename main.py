@@ -2,13 +2,14 @@ import os
 from multiprocessing import cpu_count
 
 import torch
+import torch.nn.functional as F
 from torchvision.utils import save_image
 
 import core
 from dataset import LinerCrackDataset as Dataset
 from setting import *
 from unet import UNet as Model
-from util import setcolor, miouf
+from util import setcolor, miouf, cutmix
 
 
 def operate(phase):
@@ -24,12 +25,23 @@ def operate(phase):
 
             data = data.to(device)
             target = target.to(device)
-            output = model(data)
-            loss = criterion(output, target)
-            miou = miouf(output, target).item()
+            if CR and batchidx%2==0:
+                x_cutmix, cutparam = cutmix(data)
+                y_pred_cutmix, _ = cutmix(model(data), cutparam)
+                CRloss = F.mse_loss(model(x_cutmix), y_pred_cutmix)
+                # segloss = criterion(y_pred_cutmix, cutmix(target, cutparam))
+                loss = CRloss
+                print(f'{CRloss=}')
+                core.addvalue(writer, f'CRloss:{phase}', CRloss.item(), e)
+            else:
+                # NORMAL
+                output = model(data)
+                loss = criterion(output, target)
+                miou = miouf(output, target).item()
+                core.addvalue(writer, f'miou:{phase}', miou, e)
+                print(f'{miou=:.4f}')
             core.addvalue(writer, f'loss:{phase}', loss.item(), e)
-            core.addvalue(writer, f'miou:{phase}', miou, e)
-            print(f'{e}:{batchidx}/{len(dataloader)}, loss:{loss.item():.4f},miou:{miou:.4f} {phase}')
+            print(f'{e}:{batchidx}/{len(dataloader)}, loss:{loss.item():.4f} {phase}')
             if phase == 'train':
                 loss.backward()
                 optimizer.step()
