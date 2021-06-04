@@ -39,7 +39,7 @@ def operate(phase):
                 loss = criterion(output, target)
                 miou = miouf(output, target).item()
                 core.addvalue(writer, f'miou:{phase}', miou, e)
-                print(f'{miou=:.4f}')
+                print(f'miou:{miou:.4f}')
             core.addvalue(writer, f'loss:{phase}', loss.item(), e)
             print(f'{e}:{batchidx}/{len(dataloader)}, loss:{loss.item():.4f} {phase}')
             if phase == 'train':
